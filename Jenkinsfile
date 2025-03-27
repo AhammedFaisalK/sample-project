@@ -4,7 +4,7 @@ pipeline {
     environment {
         PYTHON_VERSION = '3.9'
         VENV_NAME = 'venv'
-        PROJECT_DIR = 'src'
+        PROJECT_DIR = 'sample_project'
         PYTHON_EXECUTABLE = 'python3'
     }
     
@@ -12,6 +12,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                sh 'pwd'
+                sh 'ls -la'
                 echo "Checked out source code"
             }
         }
@@ -40,7 +42,7 @@ pipeline {
                     try {
                         sh '''
                             . ${VENV_NAME}/bin/activate
-                            pip install -r requirements.txt
+                            pip install -r ${PROJECT_DIR}/requirements.txt
                         '''
                         echo "Dependencies installed successfully"
                     } catch (Exception e) {
@@ -75,7 +77,8 @@ pipeline {
                     try {
                         sh '''
                             . ${VENV_NAME}/bin/activate
-                            flake8 ${PROJECT_DIR}
+                            cd ${PROJECT_DIR}
+                            flake8 .
                         '''
                         echo "Static code analysis completed successfully"
                     } catch (Exception e) {
@@ -121,18 +124,10 @@ pipeline {
         
         success {
             echo 'Pipeline completed successfully! 🎉'
-            // Optional: Send success notification
-            // mail to: 'your-email@example.com',
-            //      subject: "Successful Pipeline: ${currentBuild.fullDisplayName}",
-            //      body: "Great job! Pipeline completed successfully."
         }
         
         failure {
             echo 'Pipeline failed. Investigating... 🚨'
-            // Optional: Send failure notification
-            // mail to: 'your-team@example.com',
-            //      subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-            //      body: "Something went wrong. Check the console output."
         }
     }
 }
