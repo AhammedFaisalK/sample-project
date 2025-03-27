@@ -2,9 +2,8 @@ pipeline {
     agent any
     
     environment {
-        PYTHON_VERSION = '3.9'
+        PYTHON_VERSION = '3.10'
         VENV_NAME = 'venv'
-        PROJECT_DIR = 'sample_project'
         PYTHON_EXECUTABLE = 'python3'
     }
     
@@ -42,7 +41,7 @@ pipeline {
                     try {
                         sh '''
                             . ${VENV_NAME}/bin/activate
-                            pip install -r ${PROJECT_DIR}/requirements.txt
+                            pip install -r requirements.txt
                         '''
                         echo "Dependencies installed successfully"
                     } catch (Exception e) {
@@ -59,7 +58,6 @@ pipeline {
                     try {
                         sh '''
                             . ${VENV_NAME}/bin/activate
-                            cd ${PROJECT_DIR}
                             python -m pytest
                         '''
                         echo "Tests completed successfully"
@@ -77,7 +75,6 @@ pipeline {
                     try {
                         sh '''
                             . ${VENV_NAME}/bin/activate
-                            cd ${PROJECT_DIR}
                             flake8 .
                         '''
                         echo "Static code analysis completed successfully"
@@ -96,7 +93,6 @@ pipeline {
                     try {
                         sh '''
                             . ${VENV_NAME}/bin/activate
-                            cd ${PROJECT_DIR}
                             python manage.py check
                             python manage.py migrate --noinput
                         '''
