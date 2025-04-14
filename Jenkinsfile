@@ -52,6 +52,23 @@ pipeline {
             }
         }
         
+        stage('Generate Migrations') {
+            steps {
+                script {
+                    try {
+                        sh '''
+                            . ${VENV_NAME}/bin/activate
+                            python manage.py makemigrations
+                        '''
+                        echo "Migrations generated successfully"
+                    } catch (Exception e) {
+                        echo "Migration generation failed: ${e.getMessage()}"
+                        error "Migration generation failed"
+                    }
+                }
+            }
+        }
+        
         stage('Run Tests') {
             steps {
                 script {
@@ -100,6 +117,25 @@ pipeline {
                     } catch (Exception e) {
                         echo "Database migration failed: ${e.getMessage()}"
                         error "Database migration failed"
+                    }
+                }
+            }
+        }
+        
+        stage('API Documentation') {
+            steps {
+                script {
+                    try {
+                        echo "Generating API documentation"
+                        // If you're using a tool like drf-yasg or similar, you could generate docs here
+                        // For now, just logging the available endpoints
+                        sh '''
+                            . ${VENV_NAME}/bin/activate
+                            python manage.py show_urls | grep api
+                        '''
+                    } catch (Exception e) {
+                        echo "API documentation generation failed: ${e.getMessage()}"
+                        // Not failing the build for documentation issues
                     }
                 }
             }
