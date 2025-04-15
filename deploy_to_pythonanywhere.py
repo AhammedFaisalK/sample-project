@@ -26,7 +26,7 @@ def reload_webapp():
 # Function to update files on PythonAnywhere
 def update_files_from_github():
     # Get the git repo URL from command line args or environment
-    github_repo = os.environ.get('GITHUB_REPO')
+    github_repo = 'https://github.com/AhammedFaisalK/sample-project.git'
     if not github_repo:
         print("Error: GitHub repository URL not provided")
         return False
