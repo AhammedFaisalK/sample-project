@@ -5,9 +5,6 @@ pipeline {
         PYTHON_VERSION = '3.10'
         VENV_NAME = 'venv'
         PYTHON_EXECUTABLE = 'python3'
-        PA_USERNAME = credentials('pythonanywhere-username')
-        PA_API_TOKEN = credentials('pythonanywhere-api-token')
-        GITHUB_REPO = 'https://github.com/AhammedFaisalK/sample-project.git'
     }
     
     stages {
@@ -144,23 +141,6 @@ pipeline {
             }
         }
         
-        stage('Deploy to PythonAnywhere') {
-            steps {
-                script {
-                    try {
-                        sh '''
-                            . ${VENV_NAME}/bin/activate
-                            pip install requests
-                            python deploy_to_pythonanywhere.py
-                        '''
-                        echo "Deployment to PythonAnywhere completed successfully"
-                    } catch (Exception e) {
-                        echo "Deployment to PythonAnywhere failed: ${e.getMessage()}"
-                        error "Deployment failed"
-                    }
-                }
-            }
-        }
     }
     
     post {
